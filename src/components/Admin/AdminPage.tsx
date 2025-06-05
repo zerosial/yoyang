@@ -24,8 +24,7 @@ type AttendanceRecord = {
   worker_id: string;
   schedule_id: string;
   type: string; // "출근" | "퇴근"
-  date: string;
-  time: string;
+  checked_at: string;
 };
 
 type CareNoteRecord = {
@@ -488,18 +487,18 @@ function AttendanceAdminSection() {
     setLoading(true);
     let query = supabase.from("attendance").select("*");
     if (search.date) {
-      query = query.gte("date", search.date).lte("date", search.date);
+      // checked_at을 날짜 범위로 필터링
+      const start = search.date + "T00:00:00";
+      const end = search.date + "T23:59:59";
+      query = query.gte("checked_at", start).lte("checked_at", end);
     }
     if (search.worker_id) query = query.eq("worker_id", search.worker_id);
     if (search.schedule_id) query = query.eq("schedule_id", search.schedule_id);
     if (search.type) query = query.eq("type", search.type);
-    query
-      .order("date", { ascending: false })
-      .order("time", { ascending: false })
-      .then(({ data }) => {
-        setRecords(data ?? []);
-        setLoading(false);
-      });
+    query.order("checked_at", { ascending: false }).then(({ data }) => {
+      setRecords(data ?? []);
+      setLoading(false);
+    });
   }, [search]);
 
   useEffect(() => {
@@ -640,10 +639,10 @@ function AttendanceAdminSection() {
                   {rec.type}
                 </td>
                 <td style={{ padding: 8, border: "2px solid #b6c2d1" }}>
-                  {rec.date}
+                  {rec.checked_at?.slice(0, 10)}
                 </td>
                 <td style={{ padding: 8, border: "2px solid #b6c2d1" }}>
-                  {rec.time?.slice(11, 19)}
+                  {rec.checked_at?.slice(11, 19)}
                 </td>
               </tr>
             ))}
