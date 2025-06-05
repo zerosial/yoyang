@@ -8,7 +8,7 @@ alwaysApply: false
         "context_initialization": {
             "description": "세션 시작 시 참조할 문서",
             "steps": [
-                "항상 `.notes/project_overview.md`, `.notes/core_text.md`를 확인"
+                "항상 `.notes/project_overview.md`, `.notes/core_text.md`를 확인", "하나의 코드가 작업되면 요약하여 Github에 Commit"
             ]
         },
         "code_changes": [
