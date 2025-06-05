@@ -135,7 +135,18 @@ function TodayScheduleList() {
   }
 
   return (
-    <div style={{ maxWidth: 480, margin: "40px auto" }}>
+    <div
+      style={{
+        maxWidth: 480,
+        margin: "40px auto",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        minHeight: "100vh",
+        textAlign: "center",
+      }}
+    >
       <div
         style={{
           display: "flex",

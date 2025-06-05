@@ -26,7 +26,18 @@ function NotificationList() {
   if (loading) return <div>로딩 중...</div>;
 
   return (
-    <div style={{ maxWidth: 400, margin: "40px auto" }}>
+    <div
+      style={{
+        maxWidth: 400,
+        margin: "40px auto",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        minHeight: "100vh",
+        textAlign: "center",
+      }}
+    >
       <h2>알림 센터</h2>
       <ul>
         {notifications.length === 0 && <li>알림이 없습니다.</li>}

@@ -62,10 +62,22 @@ function AdminPage() {
         background: "#f7fafd",
         color: "#222",
         borderRadius: 12,
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        textAlign: "center",
       }}
     >
       <h1 style={{ color: "#222" }}>관리자 페이지</h1>
-      <div style={{ display: "flex", gap: 12, marginBottom: 24 }}>
+      <div
+        style={{
+          display: "flex",
+          gap: 12,
+          marginBottom: 24,
+          justifyContent: "center",
+        }}
+      >
         {TABS.map((t) => (
           <button
             key={t.key}
@@ -96,6 +108,13 @@ function AdminPage() {
           padding: 24,
           minHeight: 400,
           color: "#222",
+          width: "100%",
+          maxWidth: 900,
+          margin: "0 auto",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
         }}
       >
         {tab === "schedule" && <ScheduleAdminSection />}

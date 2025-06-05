@@ -89,7 +89,18 @@ function AdminAuthPage() {
   };
 
   return (
-    <div style={{ maxWidth: 340, margin: "40px auto" }}>
+    <div
+      style={{
+        maxWidth: 340,
+        margin: "40px auto",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        minHeight: "100vh",
+        textAlign: "center",
+      }}
+    >
       <h2 style={{ textAlign: "center", marginBottom: 24 }}>
         관리자 로그인/회원가입
       </h2>

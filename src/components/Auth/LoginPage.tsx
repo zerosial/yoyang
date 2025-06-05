@@ -61,7 +61,18 @@ function LoginPage() {
   };
 
   return (
-    <div style={{ maxWidth: 340, margin: "40px auto" }}>
+    <div
+      style={{
+        maxWidth: 340,
+        margin: "40px auto",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        minHeight: "100vh",
+        textAlign: "center",
+      }}
+    >
       <div style={{ display: "flex", marginBottom: 16 }}>
         <button
           style={{ flex: 1, fontWeight: tab === "login" ? "bold" : undefined }}
