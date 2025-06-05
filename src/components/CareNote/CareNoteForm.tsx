@@ -81,19 +81,7 @@ function CareNoteForm() {
   }
 
   return (
-    <div
-      style={{
-        maxWidth: 600,
-        margin: "40px auto",
-        padding: "0 20px",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        minHeight: "100vh",
-        textAlign: "center",
-      }}
-    >
+    <div style={{ maxWidth: 600, margin: "40px auto", padding: "0 20px" }}>
       <h2>환자 상태기록</h2>
 
       {/* 에러 표시 */}
