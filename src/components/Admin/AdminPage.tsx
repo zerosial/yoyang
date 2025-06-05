@@ -475,24 +475,126 @@ function ScheduleAdminSection() {
 function AttendanceAdminSection() {
   const [records, setRecords] = useState<AttendanceRecord[]>([]);
   const [loading, setLoading] = useState(true);
+  // 검색/필터 상태
+  const [search, setSearch] = useState({
+    date: new Date().toISOString().slice(0, 10), // YYYY-MM-DD
+    worker_id: "",
+    schedule_id: "",
+    type: "", // "출근" | "퇴근" | ""
+  });
 
-  useEffect(() => {
+  // 검색 조건에 따라 fetch
+  const fetchRecords = React.useCallback(() => {
     setLoading(true);
-    const today = new Date().toISOString().slice(0, 10); // 'YYYY-MM-DD'
-    supabase
-      .from("attendance")
-      .select("*")
-      .gte("checked_at", today + "T00:00:00Z")
-      .lte("checked_at", today + "T23:59:59Z")
+    let query = supabase.from("attendance").select("*");
+    if (search.date) {
+      query = query.gte("date", search.date).lte("date", search.date);
+    }
+    if (search.worker_id) query = query.eq("worker_id", search.worker_id);
+    if (search.schedule_id) query = query.eq("schedule_id", search.schedule_id);
+    if (search.type) query = query.eq("type", search.type);
+    query
+      .order("date", { ascending: false })
+      .order("time", { ascending: false })
       .then(({ data }) => {
         setRecords(data ?? []);
         setLoading(false);
       });
-  }, []);
+  }, [search]);
+
+  useEffect(() => {
+    fetchRecords();
+  }, [fetchRecords]);
+
+  // 검색 폼 핸들러
+  const handleSearchChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    const { name, value } = e.target;
+    setSearch((prev) => ({ ...prev, [name]: value }));
+  };
+  const handleSearchSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    fetchRecords();
+  };
 
   return (
     <div>
       <h2 style={{ color: "#222" }}>출퇴근 현황</h2>
+      <form
+        onSubmit={handleSearchSubmit}
+        style={{
+          display: "flex",
+          gap: 8,
+          marginBottom: 16,
+          alignItems: "center",
+        }}
+      >
+        <input
+          type="date"
+          name="date"
+          value={search.date}
+          onChange={handleSearchChange}
+          style={{
+            padding: 6,
+            borderRadius: 4,
+            border: "1px solid #b6c2d1",
+            width: 140,
+          }}
+        />
+        <input
+          name="worker_id"
+          value={search.worker_id}
+          onChange={handleSearchChange}
+          placeholder="요양보호사ID"
+          style={{
+            padding: 6,
+            borderRadius: 4,
+            border: "1px solid #b6c2d1",
+            width: 120,
+          }}
+        />
+        <input
+          name="schedule_id"
+          value={search.schedule_id}
+          onChange={handleSearchChange}
+          placeholder="일정ID"
+          style={{
+            padding: 6,
+            borderRadius: 4,
+            border: "1px solid #b6c2d1",
+            width: 120,
+          }}
+        />
+        <select
+          name="type"
+          value={search.type}
+          onChange={handleSearchChange}
+          style={{
+            padding: 6,
+            borderRadius: 4,
+            border: "1px solid #b6c2d1",
+            width: 90,
+          }}
+        >
+          <option value="">전체</option>
+          <option value="출근">출근</option>
+          <option value="퇴근">퇴근</option>
+        </select>
+        <button
+          type="submit"
+          style={{
+            padding: "6px 18px",
+            borderRadius: 4,
+            background: "#007bff",
+            color: "#fff",
+            border: "none",
+            fontWeight: 500,
+          }}
+        >
+          검색
+        </button>
+      </form>
       {loading ? (
         <div style={{ color: "#222" }}>불러오는 중...</div>
       ) : (
