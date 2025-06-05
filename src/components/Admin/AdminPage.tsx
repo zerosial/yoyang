@@ -5,7 +5,6 @@ import { supabase } from "../../supabaseClient";
 const TABS = [
   { key: "schedule", label: "근무일정 관리" },
   { key: "attendance", label: "출퇴근 현황" },
-  { key: "location", label: "위치 추적" },
   { key: "care", label: "환자 상태기록" },
   { key: "users", label: "요양보호사 전체" },
   { key: "patients", label: "환자 전체" },
@@ -27,16 +26,6 @@ type AttendanceRecord = {
   type: string; // "출근" | "퇴근"
   date: string;
   time: string;
-};
-
-type LocationLogRecord = {
-  id: string;
-  worker_id: string;
-  schedule_id: string;
-  latitude: number;
-  longitude: number;
-  logged_at: string;
-  type: string; // 출근/퇴근 등
 };
 
 type CareNoteRecord = {
@@ -112,7 +101,6 @@ function AdminPage() {
       >
         {tab === "schedule" && <ScheduleAdminSection />}
         {tab === "attendance" && <AttendanceAdminSection />}
-        {tab === "location" && <LocationAdminSection />}
         {tab === "care" && <CareNoteAdminSection />}
         {tab === "users" && <UsersAdminSection />}
         {tab === "patients" && <PatientsAdminSection />}
@@ -554,90 +542,6 @@ function AttendanceAdminSection() {
                 </td>
                 <td style={{ padding: 8, border: "2px solid #b6c2d1" }}>
                   {rec.time?.slice(11, 19)}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
-    </div>
-  );
-}
-
-function LocationAdminSection() {
-  const [logs, setLogs] = useState<LocationLogRecord[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    setLoading(true);
-    supabase
-      .from("location_logs")
-      .select("*")
-      .order("logged_at", { ascending: false })
-      .then(({ data }) => {
-        setLogs(data ?? []);
-        setLoading(false);
-      });
-  }, []);
-
-  return (
-    <div>
-      <h2 style={{ color: "#222" }}>위치/이동경로 기록</h2>
-      {loading ? (
-        <div style={{ color: "#222" }}>불러오는 중...</div>
-      ) : (
-        <table
-          style={{
-            width: "100%",
-            borderCollapse: "collapse",
-            background: "#fff",
-            color: "#222",
-            fontSize: 15,
-          }}
-        >
-          <thead>
-            <tr style={{ background: "#e3e8f0", color: "#222" }}>
-              <th style={{ padding: 8, border: "2px solid #b6c2d1" }}>
-                요양보호사
-              </th>
-              <th style={{ padding: 8, border: "2px solid #b6c2d1" }}>
-                일정ID
-              </th>
-              <th style={{ padding: 8, border: "2px solid #b6c2d1" }}>위도</th>
-              <th style={{ padding: 8, border: "2px solid #b6c2d1" }}>경도</th>
-              <th style={{ padding: 8, border: "2px solid #b6c2d1" }}>
-                기록시각
-              </th>
-              <th style={{ padding: 8, border: "2px solid #b6c2d1" }}>구분</th>
-            </tr>
-          </thead>
-          <tbody>
-            {logs.map((log) => (
-              <tr
-                key={log.id}
-                style={{ background: "#fff" }}
-                onMouseOver={(e) =>
-                  (e.currentTarget.style.background = "#f1f5fa")
-                }
-                onMouseOut={(e) => (e.currentTarget.style.background = "#fff")}
-              >
-                <td style={{ padding: 8, border: "2px solid #b6c2d1" }}>
-                  {log.worker_id}
-                </td>
-                <td style={{ padding: 8, border: "2px solid #b6c2d1" }}>
-                  {log.schedule_id}
-                </td>
-                <td style={{ padding: 8, border: "2px solid #b6c2d1" }}>
-                  {log.latitude}
-                </td>
-                <td style={{ padding: 8, border: "2px solid #b6c2d1" }}>
-                  {log.longitude}
-                </td>
-                <td style={{ padding: 8, border: "2px solid #b6c2d1" }}>
-                  {log.logged_at?.replace("T", " ").slice(0, 19)}
-                </td>
-                <td style={{ padding: 8, border: "2px solid #b6c2d1" }}>
-                  {log.type}
                 </td>
               </tr>
             ))}
